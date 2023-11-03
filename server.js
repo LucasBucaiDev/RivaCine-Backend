@@ -1,6 +1,7 @@
-const express = require("express");
-
-const routerUsers = require("./router/users");
+import express from "express";
+import RouterUsers from "./router/users.js";
+import config from "./config.js";
+import CnxMongoDB from "./model/DBMongo.js";
 
 const app = express();
 app.use(express.json());
@@ -8,11 +9,15 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static("public"));
 
-app.use("/api/users", routerUsers);
+app.use("/api/users", new RouterUsers().start());
 
-const PORT = 5432;
+if (config.MODO_PERSISTENCIA == "MONGODB") {
+  await CnxMongoDB.conectar();
+}
+
+const PORT = config.PORT;
 const server = app.listen(PORT, () =>
-  console.log(`Servidor express escuchando en el puerto: ${PORT}`)
+  console.log(`Servidor express escuchando en http://localhost:${PORT}`)
 );
 server.on("error", (error) =>
   console.log(`Error en servidor: ${error.message}`)

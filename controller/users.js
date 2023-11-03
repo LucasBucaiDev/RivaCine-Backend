@@ -5,13 +5,30 @@ class Controller {
     this.service = new Service();
   }
 
-  createUser = async () => {};
+  getUsers = async (req, res) => {
+    const { id } = req.params;
+    const users = await this.service.getUsers(id);
+    res.json(users);
+  };
 
-  getUsers = async () => {};
+  createUser = async (req, res) => {
+    const { body: user } = req;
+    const savedUser = await this.service.createUser(user);
+    res.json(savedUser);
+  };
 
-  editUser = async () => {};
+  editUser = async (req, res) => {
+    const { id } = req.params;
+    const user = req.body;
+    const updatedUser = await this.service.editUser(id, user);
+    res.json(updatedUser);
+  };
 
-  deleteUser = async () => {};
+  deleteUser = async (req, res) => {
+    const { id } = req.params;
+    const deletedUser = await this.service.deleteUser(id);
+    res.json(deletedUser);
+  };
 }
 
 export default Controller;
