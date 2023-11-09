@@ -1,18 +1,24 @@
 import express from "express";
 import RouterUsers from "./router/users.js";
+import RouterStore from "./router/store.js";
 import config from "./config.js";
 import CnxMongoDB from "./model/DBMongo.js";
+import CnxMongoDBStore from "./model/DBMongoStore.js";
+import cors from "cors";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 app.use(express.static("public"));
 
 app.use("/api/users", new RouterUsers().start());
+app.use("/api/store", new RouterStore().start());
 
 if (config.MODO_PERSISTENCIA == "MONGODB") {
   await CnxMongoDB.conectar();
+  await CnxMongoDBStore.conectar();
 }
 
 const PORT = config.PORT;

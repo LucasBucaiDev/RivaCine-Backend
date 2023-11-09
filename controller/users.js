@@ -29,6 +29,12 @@ class Controller {
     const deletedUser = await this.service.deleteUser(id);
     res.json(deletedUser);
   };
+
+  loginUser = async (req, res) => {
+    const user = req.body;
+    const loggedUser = await this.service.loginUser(user);
+    res.json(loggedUser);
+  };
 }
 
 export default Controller;

@@ -1,46 +1,46 @@
 import { ObjectId } from "mongodb";
-import CnxMongoDB from "../DBMongo.js";
+import CnxMongoDB from "../DBMongoStore.js";
 
 class ModelMongoDB {
 
-  getUsers = async (id) => {
+   getStore = async (id) => {
     if (!CnxMongoDB.connection) return id ? {} : [];
     if (id) {
       const producto = await CnxMongoDB.db
-        .collection("users")
+        .collection("tienda")
         .findOne({ _id: new ObjectId(id) });
       return producto;
     } else {
       const productos = await CnxMongoDB.db
-        .collection("users")
+        .collection("tienda")
         .find({})
         .toArray();
       return productos;
     }
   };
 
-  createUser = async (user) => {
+  createItem = async (producto) => {
     if (!CnxMongoDB.connection) return id ? {} : [];
-    await CnxMongoDB.db.collection("users").insertOne(user);
-    return user;
+    await CnxMongoDB.db.collection("tienda").insertOne(producto);
+    return producto;
   };
 
-  editUser = async (id, producto) => {
+  editItem = async (id, producto) => {
     if (!CnxMongoDB.connection) return id ? {} : [];
     await CnxMongoDB.db
-      .collection("users")
+      .collection("tienda")
       .updateOne({ _id: new ObjectId(id) }, { $set: producto });
 
-    const productoActualizado = await this.getUsers(id);
+    const productoActualizado = await this.getStore(id);
 
     return productoActualizado;
   };
 
-  deleteUser = async (id) => {
+  deleteItem = async (id) => {
     if (!CnxMongoDB.connection) return id ? {} : [];
-    const productoBorrado = await this.getUsers(id);
+    const productoBorrado = await this.getStore(id);
     await CnxMongoDB.db
-      .collection("users")
+      .collection("tienda")
       .deleteOne({ _id: new ObjectId(id) });
     return productoBorrado;
   };
