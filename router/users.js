@@ -9,7 +9,7 @@ class Router {
   start() {
     this.router.get("/:id?", this.controller.getUsers);
     this.router.post("/", this.controller.createUser);
-    this.router.put("/:id?", this.controller.editUser);
+    this.router.put("/", this.controller.editUser);
     this.router.delete("/:id", this.controller.deleteUser);
     this.router.post("/login", this.controller.loginUser);
 

@@ -18,9 +18,8 @@ class Controller {
   };
 
   editUser = async (req, res) => {
-    const { id } = req.params;
     const user = req.body;
-    const updatedUser = await this.service.editUser(id, user);
+    const updatedUser = await this.service.editUser(user);
     res.json(updatedUser);
   };
 

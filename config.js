@@ -9,5 +9,5 @@ export default {
   MODO_PERSISTENCIA,
   STRCNX,
   BASE,
-  BASE2
+  BASE2,
 };

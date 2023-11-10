@@ -2,20 +2,19 @@ import { ObjectId } from "mongodb";
 import CnxMongoDB from "../DBMongo.js";
 
 class ModelMongoDB {
-
   getUsers = async (id) => {
     if (!CnxMongoDB.connection) return id ? {} : [];
     if (id) {
-      const producto = await CnxMongoDB.db
+      const usuario = await CnxMongoDB.db
         .collection("users")
         .findOne({ _id: new ObjectId(id) });
-      return producto;
+      return usuario;
     } else {
-      const productos = await CnxMongoDB.db
+      const usuarios = await CnxMongoDB.db
         .collection("users")
         .find({})
         .toArray();
-      return productos;
+      return usuarios;
     }
   };
 
@@ -25,24 +24,26 @@ class ModelMongoDB {
     return user;
   };
 
-  editUser = async (id, producto) => {
-    if (!CnxMongoDB.connection) return id ? {} : [];
-    await CnxMongoDB.db
+  editUser = async (usuario) => {
+    if (!CnxMongoDB.connection) return usuario ? {} : [];
+    const { _id, ...usuarioParaActualizar } = usuario;
+    const usuarioActualizado = await CnxMongoDB.db
       .collection("users")
-      .updateOne({ _id: new ObjectId(id) }, { $set: producto });
+      .updateOne(
+        { _id: new ObjectId(usuario._id) },
+        { $set: usuarioParaActualizar }
+      );
 
-    const productoActualizado = await this.getUsers(id);
-
-    return productoActualizado;
+    return usuarioActualizado;
   };
 
   deleteUser = async (id) => {
     if (!CnxMongoDB.connection) return id ? {} : [];
-    const productoBorrado = await this.getUsers(id);
+    const usuarioBorrado = await this.getUsers(id);
     await CnxMongoDB.db
       .collection("users")
       .deleteOne({ _id: new ObjectId(id) });
-    return productoBorrado;
+    return usuarioBorrado;
   };
 }
 
