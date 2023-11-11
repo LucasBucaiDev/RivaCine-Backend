@@ -9,7 +9,7 @@ class Router {
   start() {
     this.router.get("/:id?", this.controller.getStore);
     this.router.post("/", this.controller.createItem);
-    this.router.put("/:id?", this.controller.editItem);
+    this.router.put("/", this.controller.editItem);
     this.router.delete("/:id", this.controller.deleteItem);
 
     return this.router;

@@ -2,8 +2,7 @@ import { ObjectId } from "mongodb";
 import CnxMongoDB from "../DBMongoStore.js";
 
 class ModelMongoDB {
-
-   getStore = async (id) => {
+  getStore = async (id) => {
     if (!CnxMongoDB.connection) return id ? {} : [];
     if (id) {
       const producto = await CnxMongoDB.db
@@ -25,15 +24,14 @@ class ModelMongoDB {
     return producto;
   };
 
-  editItem = async (id, producto) => {
-    if (!CnxMongoDB.connection) return id ? {} : [];
-    await CnxMongoDB.db
+  editItem = async (item) => {
+    if (!CnxMongoDB.connection) return item ? {} : [];
+    const { _id, ...itemParaActualizar } = item;
+    const itemActualizado = await CnxMongoDB.db
       .collection("tienda")
-      .updateOne({ _id: new ObjectId(id) }, { $set: producto });
+      .updateOne({ _id: new ObjectId(item._id) }, { $set: itemParaActualizar });
 
-    const productoActualizado = await this.getStore(id);
-
-    return productoActualizado;
+    return itemActualizado;
   };
 
   deleteItem = async (id) => {

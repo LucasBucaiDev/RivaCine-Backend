@@ -18,10 +18,9 @@ class Controller {
   };
 
   editItem = async (req, res) => {
-    const { id } = req.params;
-    const user = req.body;
-    const updatedUser = await this.service.editItem(id, user);
-    res.json(updatedUser);
+    const item = req.body;
+    const updatedItem = await this.service.editItem(item);
+    res.json(updatedItem);
   };
 
   deleteItem = async (req, res) => {

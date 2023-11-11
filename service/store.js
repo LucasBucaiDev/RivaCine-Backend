@@ -15,9 +15,9 @@ class Service {
     return savedUser;
   };
 
-  editItem = async (id, user) => {
-    const updatedUser = await this.model.editItem(id, user);
-    return updatedUser;
+  editItem = async (item) => {
+    const updatedItem = await this.model.editItem(item);
+    return updatedItem;
   };
 
   deleteItem = async (id) => {
