@@ -3,7 +3,6 @@ import RouterUsers from "./router/users.js";
 import RouterStore from "./router/store.js";
 import config from "./config.js";
 import CnxMongoDB from "./model/DBMongo.js";
-import CnxMongoDBStore from "./model/DBMongoStore.js";
 import cors from "cors";
 
 const app = express();
@@ -18,7 +17,6 @@ app.use("/api/store", new RouterStore().start());
 
 if (config.MODO_PERSISTENCIA == "MONGODB") {
   await CnxMongoDB.conectar();
-  await CnxMongoDBStore.conectar();
 }
 
 const PORT = config.PORT;

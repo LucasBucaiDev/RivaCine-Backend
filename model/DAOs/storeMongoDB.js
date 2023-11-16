@@ -1,47 +1,52 @@
 import { ObjectId } from "mongodb";
-import CnxMongoDB from "../DBMongoStore.js";
+import CnxMongoDB from "../DBMongo.js";
 
-class ModelMongoDB {
+class StoreModelMongoDB {
+  constructor() {
+    this.collectionName = "candy";
+  }
+
   getStore = async (id) => {
     if (!CnxMongoDB.connection) return id ? {} : [];
+
     if (id) {
-      const producto = await CnxMongoDB.db
-        .collection("tienda")
+      const item = await CnxMongoDB.db
+        .collection(this.collectionName)
         .findOne({ _id: new ObjectId(id) });
-      return producto;
+      return item;
     } else {
-      const productos = await CnxMongoDB.db
-        .collection("tienda")
+      const items = await CnxMongoDB.db
+        .collection(this.collectionName)
         .find({})
         .toArray();
-      return productos;
+      return items;
     }
   };
 
-  createItem = async (producto) => {
+  createItem = async (item) => {
     if (!CnxMongoDB.connection) return id ? {} : [];
-    await CnxMongoDB.db.collection("tienda").insertOne(producto);
-    return producto;
+    await CnxMongoDB.db.collection(this.collectionName).insertOne(item);
+    return item;
   };
 
   editItem = async (item) => {
     if (!CnxMongoDB.connection) return item ? {} : [];
-    const { _id, ...itemParaActualizar } = item;
-    const itemActualizado = await CnxMongoDB.db
-      .collection("tienda")
-      .updateOne({ _id: new ObjectId(item._id) }, { $set: itemParaActualizar });
+    const { _id, ...itemToUpdate } = item;
+    const updatedItem = await CnxMongoDB.db
+      .collection(this.collectionName)
+      .updateOne({ _id: new ObjectId(item._id) }, { $set: itemToUpdate });
 
-    return itemActualizado;
+    return updatedItem;
   };
 
   deleteItem = async (id) => {
     if (!CnxMongoDB.connection) return id ? {} : [];
-    const productoBorrado = await this.getStore(id);
+    const deletedItem = await this.getStore(id);
     await CnxMongoDB.db
-      .collection("tienda")
+      .collection(this.collectionName)
       .deleteOne({ _id: new ObjectId(id) });
-    return productoBorrado;
+    return deletedItem;
   };
 }
 
-export default ModelMongoDB;
+export default StoreModelMongoDB;

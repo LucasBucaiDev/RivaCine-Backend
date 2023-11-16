@@ -1,17 +1,22 @@
 import { ObjectId } from "mongodb";
 import CnxMongoDB from "../DBMongo.js";
 
-class ModelMongoDB {
+class UserModelMongoDB {
+  constructor() {
+    this.collectionName = "users";
+  }
+
   getUsers = async (id) => {
     if (!CnxMongoDB.connection) return id ? {} : [];
+
     if (id) {
       const usuario = await CnxMongoDB.db
-        .collection("users")
+        .collection(this.collectionName)
         .findOne({ _id: new ObjectId(id) });
       return usuario;
     } else {
       const usuarios = await CnxMongoDB.db
-        .collection("users")
+        .collection(this.collectionName)
         .find({})
         .toArray();
       return usuarios;
@@ -20,7 +25,7 @@ class ModelMongoDB {
 
   createUser = async (user) => {
     if (!CnxMongoDB.connection) return id ? {} : [];
-    await CnxMongoDB.db.collection("users").insertOne(user);
+    await CnxMongoDB.db.collection(this.collectionName).insertOne(user);
     return user;
   };
 
@@ -28,7 +33,7 @@ class ModelMongoDB {
     if (!CnxMongoDB.connection) return usuario ? {} : [];
     const { _id, ...usuarioParaActualizar } = usuario;
     const usuarioActualizado = await CnxMongoDB.db
-      .collection("users")
+      .collection(this.collectionName)
       .updateOne(
         { _id: new ObjectId(usuario._id) },
         { $set: usuarioParaActualizar }
@@ -41,10 +46,10 @@ class ModelMongoDB {
     if (!CnxMongoDB.connection) return id ? {} : [];
     const usuarioBorrado = await this.getUsers(id);
     await CnxMongoDB.db
-      .collection("users")
+      .collection(this.collectionName)
       .deleteOne({ _id: new ObjectId(id) });
     return usuarioBorrado;
   };
 }
 
-export default ModelMongoDB;
+export default UserModelMongoDB;
