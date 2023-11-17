@@ -1,6 +1,7 @@
 import express from "express";
 import RouterUsers from "./router/users.js";
 import RouterStore from "./router/store.js";
+import RouterWeather from "./router/weather.js";
 import config from "./config.js";
 import CnxMongoDB from "./model/DBMongo.js";
 import cors from "cors";
@@ -14,6 +15,7 @@ app.use(express.static("public"));
 
 app.use("/api/users", new RouterUsers().start());
 app.use("/api/store", new RouterStore().start());
+app.use("/api/weather", new RouterWeather().start());
 
 if (config.MODO_PERSISTENCIA == "MONGODB") {
   await CnxMongoDB.conectar();
