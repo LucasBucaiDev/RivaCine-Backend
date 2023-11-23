@@ -13,9 +13,9 @@ app.use(cors());
 
 app.use(express.static("public"));
 
+app.use("/api/weather", new RouterWeather().start());
 app.use("/api/users", new RouterUsers().start());
 app.use("/api/store", new RouterStore().start());
-app.use("/api/weather", new RouterWeather().start());
 
 if (config.MODO_PERSISTENCIA == "MONGODB") {
   await CnxMongoDB.conectar();

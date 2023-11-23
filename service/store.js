@@ -1,18 +1,26 @@
 import Model from "../model/DAOs/storeMongoDB.js";
+import WeatherUtil from "../utils/weather.js";
 
 class Service {
   constructor() {
     this.model = new Model();
+    this.weatherUtil = new WeatherUtil();
   }
 
   getStore = async (id) => {
-    const users = await this.model.getStore(id);
-    return users;
+    if (await this.weatherUtil.isRaining()) {
+      const store = await this.model.getStore();
+      const items = await this.weatherUtil.makeDiscount(store);
+      return items;
+    } else {
+      const items = await this.model.getStore(id);
+      return items;
+    }
   };
 
-  createItem = async (user) => {
-    const savedUser = await this.model.createItem(user);
-    return savedUser;
+  createItem = async (item) => {
+    const savedItem = await this.model.createItem(item);
+    return savedItem;
   };
 
   editItem = async (item) => {
@@ -21,8 +29,8 @@ class Service {
   };
 
   deleteItem = async (id) => {
-    const deletedUser = await this.model.deleteItem(id);
-    return deletedUser;
+    const deletedItem = await this.model.deleteItem(id);
+    return deletedItem;
   };
 }
 
