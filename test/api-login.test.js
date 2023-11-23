@@ -17,10 +17,10 @@ describe("POST", () => {
     console.log(existingUser);
 
     const response = await request.post("/api/users/login").send(existingUser);
-
     const token = response.body;
     expect(token).to.not.be.undefined;
     console.log(`Token JWT: ${token}`);
+    console.log(`Status: ${response.status}`);
 
     await server.stop();
   });
@@ -37,7 +37,7 @@ describe("POST", () => {
     const response = await request.post("/api/users/login").send(user);
     expect(response.body).to.be.null;
     console.log(`Token (No existe): ${response.body}`);
-
+    console.log(`Status: ${response.status}`);
     await server.stop();
   });
 });

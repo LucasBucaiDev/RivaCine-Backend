@@ -32,6 +32,9 @@ class Controller {
   loginUser = async (req, res) => {
     const user = req.body;
     const loggedUser = await this.service.loginUser(user);
+    if (loggedUser == null) {
+      res.status(401);
+    }
     res.json(loggedUser);
   };
 }

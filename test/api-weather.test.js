@@ -11,6 +11,7 @@ describe("GET", () => {
     const response = await request.get("/api/weather");
 
     expect(response.status).to.eql(200);
+    console.log("API del clima funcionando correctamente");
 
     await server.stop();
   });
