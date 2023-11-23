@@ -2,29 +2,45 @@ import express from "express";
 import RouterUsers from "./router/users.js";
 import RouterStore from "./router/store.js";
 import RouterWeather from "./router/weather.js";
-import config from "./config.js";
 import CnxMongoDB from "./model/DBMongo.js";
 import cors from "cors";
 
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+class Server {
+  constructor(port) {
+    this.port = port;
+    this.app = express();
+    this.server = null;
+  }
 
-app.use(express.static("public"));
+  async start() {
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(cors());
 
-app.use("/api/weather", new RouterWeather().start());
-app.use("/api/users", new RouterUsers().start());
-app.use("/api/store", new RouterStore().start());
+    this.app.use("/api/weather", new RouterWeather().start());
+    this.app.use("/api/users", new RouterUsers().start());
+    this.app.use("/api/store", new RouterStore().start());
 
-if (config.MODO_PERSISTENCIA == "MONGODB") {
-  await CnxMongoDB.conectar();
+    await CnxMongoDB.conectar();
+
+    const PORT = this.port;
+    this.server = this.app.listen(PORT, () =>
+      console.log(`Servidor express escuchando en http://localhost:${PORT}`)
+    );
+    this.server.on("error", (error) =>
+      console.log(`Error en servidor: ${error.message}`)
+    );
+
+    return this.app;
+  }
+
+  async stop() {
+    if (this.server) {
+      this.server.close();
+      await CnxMongoDB.desconectar();
+      this.server = null;
+    }
+  }
 }
 
-const PORT = config.PORT;
-const server = app.listen(PORT, () =>
-  console.log(`Servidor express escuchando en http://localhost:${PORT}`)
-);
-server.on("error", (error) =>
-  console.log(`Error en servidor: ${error.message}`)
-);
+export default Server;

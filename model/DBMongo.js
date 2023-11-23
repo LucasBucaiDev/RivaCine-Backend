@@ -24,7 +24,11 @@ class CnxMongoDB {
     }
   };
 
-  static desconectar = () => {};
+  static desconectar = async (_) => {
+    if (!CnxMongoDB.connection) return;
+    await CnxMongoDB.client.close();
+    CnxMongoDB.connection = false;
+  };
 }
 
 export default CnxMongoDB;

@@ -34,9 +34,12 @@ class Service {
     if (foundUser) {
       const token = jsonwebtoken.sign(
         { email: user.email, rol: "admin" },
-        "clave_secreta"
+        "clave_secreta",
+        { expiresIn: "1h" }
       );
       return token;
+    } else {
+      return null;
     }
   };
 }
